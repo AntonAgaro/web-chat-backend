@@ -10,10 +10,9 @@ class UsersService {
        return res;
     }
 
-    async checkUserAlreadyExist(user: User) {
+    async getUserByName(user: User) {
         const res = await UsersRepository.getByUserName(user)
-        console.log(res)
-        return !!res.length
+        return res.length ? res[0] : null
     }
 
     async getAll() {

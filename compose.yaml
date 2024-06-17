@@ -23,7 +23,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./pgadmin_data:/pgadmin
+      - ./pgadmin_data:/root/.pgadmin:rw
     depends_on:
       db:
         condition: service_healthy

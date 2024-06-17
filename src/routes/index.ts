@@ -1,9 +1,9 @@
 import {Router} from "express";
-import {carAdRouter} from "./carAdRouter";
 import {UsersRouter} from "./UsersRouter";
+import {AuthRouter} from "./AuthRouter";
 
 const router = Router()
-router.use('/car-ad', carAdRouter)
 router.use('/users', UsersRouter)
+router.use('/auth', AuthRouter)
 
 export {router}
