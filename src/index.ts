@@ -3,6 +3,7 @@ import {pool} from "./db/config";
 import {router} from "./routes";
 import errorHandlingMiddleware from "./middlewares/errorHadlingMiddleware";
 import cors from 'cors';
+import authMiddleware from "./middlewares/authMiddleware";
 
 pool.on('connect', () => {
     console.log('Connected to the database')
@@ -17,8 +18,9 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-app.use('/api', router)
 app.use(errorHandlingMiddleware)
+app.use(authMiddleware)
+app.use('/api', router)
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello World!')
