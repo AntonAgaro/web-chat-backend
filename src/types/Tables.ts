@@ -1,5 +1,5 @@
 export enum Tables {
-    Users = 'users',
-    Roles = 'role',
-    UsersRoles = 'users_roles'
+  Users = 'users',
+  Roles = 'role',
+  UsersRoles = 'users_roles',
 }

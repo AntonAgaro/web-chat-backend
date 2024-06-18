@@ -10,11 +10,11 @@ exports.shorthands = undefined;
  * @returns {Promise<void> | void}
  */
 exports.up = (pgm) => {
-    pgm.createTable('users', {
-        id: 'id',
-        username: { type: 'varchar(1000)', notNull: true },
-        password: { type: 'varchar(1000)', notNull: true },
-    });
+  pgm.createTable('users', {
+    id: 'id',
+    username: { type: 'varchar(1000)', notNull: true },
+    password: { type: 'varchar(1000)', notNull: true },
+  });
 };
 
 /**

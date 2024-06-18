@@ -9,14 +9,14 @@ exports.shorthands = undefined;
  * @returns {Promise<void> | void}
  */
 exports.up = (pgm) => {
-    pgm.createTable('role', {
-        id: 'id',
-        name: { type: 'varchar(1000)', notNull: true },
-    })
+  pgm.createTable('role', {
+    id: 'id',
+    name: { type: 'varchar(1000)', notNull: true },
+  });
 
-    pgm.sql(`INSERT INTO role (name) VALUES ('user')`)
-    pgm.sql(`INSERT INTO role (name) VALUES ('admin')`)
-    pgm.sql(`INSERT INTO role (name) VALUES ('moderator')`)
+  pgm.sql(`INSERT INTO role (name) VALUES ('user')`);
+  pgm.sql(`INSERT INTO role (name) VALUES ('admin')`);
+  pgm.sql(`INSERT INTO role (name) VALUES ('moderator')`);
 };
 
 /**

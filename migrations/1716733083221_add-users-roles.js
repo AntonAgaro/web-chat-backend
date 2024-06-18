@@ -9,16 +9,16 @@ exports.shorthands = undefined;
  * @returns {Promise<void> | void}
  */
 exports.up = (pgm) => {
-    pgm.createTable('users_roles', {
-        user_id: {
-            type: 'integer',
-            notNull: true
-        },
-        role_id: {
-            type: 'integer',
-            notNull: true
-        }
-    })
+  pgm.createTable('users_roles', {
+    user_id: {
+      type: 'integer',
+      notNull: true,
+    },
+    role_id: {
+      type: 'integer',
+      notNull: true,
+    },
+  });
 };
 
 /**
