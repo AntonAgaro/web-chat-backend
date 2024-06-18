@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, {JwtPayload} from 'jsonwebtoken';
 import config from '../config/auth.config'
 import {Request, Response, NextFunction} from "express";
 
@@ -6,19 +6,22 @@ export default function(req: Request, res: Response, next: NextFunction) {
     const token = req.headers['x-access-token'];
     console.log(token)
     if (!token) {
-        req.user = null
         next()
         return
     }
 
     jwt.verify(token as string, config.secret, (err, decoded) => {
-        if (err) {
-            req.user = null
+        if (err || !decoded) {
             next()
             return
         }
 
-        req.user = decoded ?? null
+        const user = decoded as JwtPayload
+
+        req.user = {
+            username: user.username ?? '',
+            roles: user.roles ?? []
+        }
         console.log(req.user)
         next()
     })

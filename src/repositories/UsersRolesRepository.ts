@@ -21,6 +21,19 @@ class UsersRolesRepository {
         });
         return res.rows[0]
     }
+
+    async getRolesByUserId(userId: number) {
+        const res = await errorHandler( async () => {
+            return await pool.query(`
+                SELECT ur.user_id, ur.role_id, r.name as role_name
+                FROM users_roles as ur
+                LEFT JOIN role as r
+                ON ur.role_id = r.id
+                WHERE user_id = ${userId}
+                `)
+        })
+        return res.rows
+    }
 }
 
 export default new UsersRolesRepository()

@@ -28,14 +28,13 @@ class AuthController {
             if (!passwordIsValid) {
                 return response.status(401).json({message: `Password for user ${user.username} is incorrect!`})
             }
-            //TODO добавить роли пользователя в токен
-            const token = jwt.sign({username: existingUser.username}, authConfig.secret, {
+
+            const userRoles = await UsersService.getUserRoles(existingUser.id)
+            const token = jwt.sign({username: existingUser.username, roles: userRoles}, authConfig.secret, {
                 algorithm: 'HS256',
                 allowInsecureKeySizes: true,
                 expiresIn: 86400
             })
-
-            //TODO найти и добавить в ответ роли пользователя
 
             return response.status(200).json({
                 id: existingUser.id,

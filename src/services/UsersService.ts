@@ -18,6 +18,10 @@ class UsersService {
     async getAll() {
         return await UsersRepository.getAll()
     }
+
+    async getUserRoles(userId: number) {
+        return await UsersRolesRepository.getRolesByUserId(userId)
+    }
 }
 
 export default new UsersService()

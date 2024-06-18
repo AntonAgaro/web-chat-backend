@@ -17,6 +17,8 @@ class TestController {
             next(e)
         }
     }
+
+    //TODO checks for admin, moderator, etc.
 }
 
 export default new TestController()
