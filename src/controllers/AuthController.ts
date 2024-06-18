@@ -56,10 +56,13 @@ class AuthController {
             }
             const existingUser = await UsersService.getUserByName(user)
             if (existingUser) {
-                return response.status(200).json({message: `User with username ${user.username} already exist!`})
+                return response.status(409).json({message: `User with username ${user.username} already exist!`})
             }
             const res = await UsersService.createUser(user)
-            return response.status(200).json({message: 'User was successfully created!', user: res})
+            return response.status(200).json({message: 'User was successfully created!', user: {
+                    username: res.username,
+                    id: res.id
+                }})
         } catch (e) {
             next(e)
         }

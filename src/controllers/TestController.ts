@@ -1,5 +1,5 @@
 import type {NextFunction, Request, Response} from "express";
-import ApiError from "../utils/error";
+
 
 class TestController {
     publicAccess(req: Request, res: Response) {
