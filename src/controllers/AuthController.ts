@@ -52,7 +52,7 @@ class AuthController {
             const {user} = request.body
 
             if (!user) {
-                return response.status(400).json({message: "User not found!"})
+                return response.status(400).json({message: "User data not found!"})
             }
             const existingUser = await UsersService.getUserByName(user)
             if (existingUser) {
