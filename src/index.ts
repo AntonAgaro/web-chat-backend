@@ -4,6 +4,7 @@ import { router } from './routes';
 import errorHandlingMiddleware from './middlewares/errorHadlingMiddleware';
 import cors from 'cors';
 import authMiddleware from './middlewares/authMiddleware';
+import cookieParser from 'cookie-parser';
 
 pool.on('connect', () => {
   console.log('Connected to the database');
@@ -19,6 +20,7 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(errorHandlingMiddleware);
 app.use(authMiddleware);
 app.use('/api', router);

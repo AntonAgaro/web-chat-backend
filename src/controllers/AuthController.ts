@@ -44,6 +44,12 @@ class AuthController {
         },
       );
 
+      response.cookie('token', token, {
+        secure: false,
+        httpOnly: true,
+        expires: new Date(Date.now() + 86400000),
+      })
+
       return response.status(200).json({
         id: existingUser.id,
         username: existingUser.username,
