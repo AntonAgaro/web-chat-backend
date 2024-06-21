@@ -49,8 +49,10 @@ class AuthController {
         expires: new Date(Date.now() + 86400000),
       }).status(200).json({
         message: 'You successfully signed in!',
-        id: existingUser.id,
-        username: existingUser.username,
+        user: {
+          id: existingUser.id,
+          username: existingUser.username,
+        }
       });
     } catch (e) {
       next(e);

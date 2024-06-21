@@ -87,7 +87,8 @@ describe('Test signin', () => {
       },
     });
     expect(response.status).toBe(200);
-    expect(response.body.id).toBeDefined();
-    expect(response.body.username).toBe(username);
+    expect(response.body.user).toBeDefined();
+    expect(response.body.user.id).toBeDefined();
+    expect(response.body.user.username).toBe(username);
   });
 });
