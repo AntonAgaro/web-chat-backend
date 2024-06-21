@@ -90,5 +90,7 @@ describe('Test signin', () => {
     expect(response.body.user).toBeDefined();
     expect(response.body.user.id).toBeDefined();
     expect(response.body.user.username).toBe(username);
+    expect(response.body.user.roles).toBeDefined()
   });
+  //TODO add test for user details and signin after signup
 });

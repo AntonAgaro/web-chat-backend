@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 
 export default function (req: Request, res: Response, next: NextFunction) {
   const token = req.cookies.token;
-  console.log(token);
+
   if (!token) {
     next();
     return;
@@ -19,6 +19,7 @@ export default function (req: Request, res: Response, next: NextFunction) {
     const user = decoded as JwtPayload;
 
     req.user = {
+      id: user.id ?? 0,
       username: user.username ?? '',
       roles: user.roles ?? [],
     };

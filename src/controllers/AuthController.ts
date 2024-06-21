@@ -34,7 +34,7 @@ class AuthController {
 
       const userRoles = await UsersService.getUserRoles(existingUser.id);
       const token = jwt.sign(
-        { username: existingUser.username, roles: userRoles },
+        { id: existingUser.id, username: existingUser.username, roles: userRoles },
         authConfig.secret,
         {
           algorithm: 'HS256',
@@ -52,6 +52,7 @@ class AuthController {
         user: {
           id: existingUser.id,
           username: existingUser.username,
+          roles: userRoles
         }
       });
     } catch (e) {
@@ -72,6 +73,7 @@ class AuthController {
           message: `User with username ${user.username} already exist!`,
         });
       }
+      //TODO add signin logic
       const res = await UsersService.createUser(user);
       return response.status(200).json({
         message: 'User was successfully created!',
@@ -79,6 +81,23 @@ class AuthController {
           username: res.username,
           id: res.id,
         },
+      });
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async getUserDetails(request: Request, response: Response, next: NextFunction) {
+    try {
+      const token = request.body.token;
+
+      if (!token) {
+        return response.status(200).json({ message: 'User is not authorized!' });
+      }
+
+      const user = jwt.verify(token, authConfig.secret) as { id: number, username: string, roles: string[] };
+      return response.status(200).json({
+        user
       });
     } catch (e) {
       next(e);
