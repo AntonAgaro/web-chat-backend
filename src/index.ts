@@ -16,6 +16,8 @@ app.use(
   cors({
     //frontend host
     origin: 'http://localhost:5173',
+    //send cookies
+    credentials: true
   }),
 );
 app.use(express.json());

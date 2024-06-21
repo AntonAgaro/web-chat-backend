@@ -6,7 +6,6 @@ import authConfig from '../config/auth.config';
 
 class AuthController {
   async signin(request: Request, response: Response, next: NextFunction) {
-    //TODO если несколько раз логинишься, jwt каждый раз перегенериться!!!???
     try {
       const { user } = request.body;
 
@@ -44,16 +43,14 @@ class AuthController {
         },
       );
 
-      response.cookie('token', token, {
+      return response.cookie('token', token, {
         secure: false,
         httpOnly: true,
         expires: new Date(Date.now() + 86400000),
-      })
-
-      return response.status(200).json({
+      }).status(200).json({
+        message: 'You successfully signed in!',
         id: existingUser.id,
         username: existingUser.username,
-        accessToken: token,
       });
     } catch (e) {
       next(e);
