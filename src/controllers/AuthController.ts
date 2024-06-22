@@ -109,6 +109,15 @@ class AuthController {
       next(e);
     }
   }
+
+  async logout(request: Request, response: Response, next: NextFunction) {
+    try {
+      response.clearCookie('token');
+      response.status(200).json({ message: 'You successfully signed out!' });
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export default new AuthController();

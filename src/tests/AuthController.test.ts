@@ -93,4 +93,5 @@ describe('Test signin', () => {
     expect(response.body.user.roles).toBeDefined()
   });
   //TODO add test for user details and signin after signup
+  //TODO add test for logout
 });
