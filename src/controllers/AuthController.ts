@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import UsersService from '../services/UsersService';
 import bcrypt from 'bcrypt';
-import jwt, {JwtPayload} from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import authConfig from '../config/auth.config';
+import AuthService from '../services/AuthService';
 
 class AuthController {
   async signin(request: Request, response: Response, next: NextFunction) {
@@ -32,29 +33,23 @@ class AuthController {
         });
       }
 
-      const userRoles = await UsersService.getUserRoles(existingUser.id);
-      const token = jwt.sign(
-        { id: existingUser.id, username: existingUser.username, roles: userRoles },
-        authConfig.secret,
-        {
-          algorithm: 'HS256',
-          allowInsecureKeySizes: true,
-          expiresIn: 86400,
-        },
-      );
+      const { userRoles, token } = await AuthService.createToken(existingUser);
 
-      return response.cookie('token', token, {
-        secure: false,
-        httpOnly: true,
-        expires: new Date(Date.now() + 86400000),
-      }).status(200).json({
-        message: 'You successfully signed in!',
-        user: {
-          id: existingUser.id,
-          username: existingUser.username,
-          roles: userRoles
-        }
-      });
+      return response
+        .cookie('token', token, {
+          secure: false,
+          httpOnly: true,
+          expires: new Date(Date.now() + 86400000),
+        })
+        .status(200)
+        .json({
+          message: 'You successfully signed in!',
+          user: {
+            id: existingUser.id,
+            username: existingUser.username,
+            roles: userRoles,
+          },
+        });
     } catch (e) {
       next(e);
     }
@@ -73,38 +68,53 @@ class AuthController {
           message: `User with username ${user.username} already exist!`,
         });
       }
-      //TODO add signin logic
-      const res = await UsersService.createUser(user);
-      return response.status(200).json({
-        message: 'User was successfully created!',
-        user: {
-          username: res.username,
-          id: res.id,
-        },
-      });
+
+      const newUser = await UsersService.createUser(user);
+      const { userRoles, token } = await AuthService.createToken(newUser);
+
+      return response
+        .cookie('token', token, {
+          secure: false,
+          httpOnly: true,
+          expires: new Date(Date.now() + 86400000),
+        })
+        .status(200)
+        .json({
+          message: 'You successfully created and signed in!',
+          user: {
+            id: newUser.id,
+            username: newUser.username,
+            roles: userRoles,
+          },
+        });
     } catch (e) {
       next(e);
     }
   }
 
-  async getUserDetails(request: Request, response: Response, next: NextFunction) {
+  async getUserDetails(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ) {
     try {
       const token = request.body.token;
 
       if (!token || typeof token !== 'string') {
-        return response.status(200).json({ message: 'User is not authorized!' });
+        return response
+          .status(200)
+          .json({ message: 'User is not authorized!' });
       }
 
       jwt.verify(token, authConfig.secret, (error, decoded) => {
-        if (error || !decoded)  {
-            response.status(200).json({ message: 'User is not authorized!' });
-            return;
+        if (error || !decoded) {
+          response.status(200).json({ message: 'User is not authorized!' });
+          return;
         }
-         response.status(200).json({
-          user: decoded as JwtPayload
+        response.status(200).json({
+          user: decoded as JwtPayload,
         });
       });
-
     } catch (e) {
       next(e);
     }
