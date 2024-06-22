@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import UsersService from '../services/UsersService';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, {JwtPayload} from 'jsonwebtoken';
 import authConfig from '../config/auth.config';
 
 class AuthController {
@@ -91,14 +91,20 @@ class AuthController {
     try {
       const token = request.body.token;
 
-      if (!token) {
+      if (!token || typeof token !== 'string') {
         return response.status(200).json({ message: 'User is not authorized!' });
       }
 
-      const user = jwt.verify(token, authConfig.secret) as { id: number, username: string, roles: string[] };
-      return response.status(200).json({
-        user
+      jwt.verify(token, authConfig.secret, (error, decoded) => {
+        if (error || !decoded)  {
+            response.status(200).json({ message: 'User is not authorized!' });
+            return;
+        }
+         response.status(200).json({
+          user: decoded as JwtPayload
+        });
       });
+
     } catch (e) {
       next(e);
     }
